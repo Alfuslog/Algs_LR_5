@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iterator>
 #include <chrono>
+#include <string>
 
 using namespace std;
 
@@ -42,169 +43,33 @@ void freePtr(int* arr, int** ptrArr) {
     delete[] ptrArr;
 }
 
-void inclusionSortTrdTask(int* num, int size)
+// функция с алгоритмом двоичного поиска 
+void Search_Binary(int arr[], int left, int right, int key)
 {
-    auto begin = std::chrono::steady_clock::now();
-
-    int cmp = 0, chg = 0, itr = 0;
-    cout << "\n-------Сортировка с помощью прямого включения-------\n";
-    // Для всех элементов кроме начального
-    for (int i = 1; i < size; i++)
+    string otvet;
+    int cntSravn = 0, midd = 0;
+    while (1)
     {
-        itr++;
-        int value = num[i]; chg++; // запоминаем значение элемента
-        int index = i; chg++;     // и его индекс
-        cmp++;
-        while ((index > 0) && (num[index - 1] < value) && num[index] % 2 == 0)
-        {
-            itr++;
-            // смещаем другие элементы к концу массива пока они меньше index
-
-            num[index] = num[index - 1]; chg++;
-            index--;    // смещаем просмотр к началу массива
-            cmp++;
+        midd = (left + right) / 2;
+        cntSravn++;
+        if (key < arr[midd])       // если искомое меньше значения в ячейке
+            right = midd - 1;      // смещаем правую границу поиска
+        
+        else if (key > arr[midd]) {  // если искомое больше значения в ячейке
+            cntSravn++;
+            left = midd + 1;	   // смещаем левую границу поиска
         }
-        num[index] = value; chg++;; // рассматриваемый элемент помещаем на освободившееся место
+        else {                      // иначе (значения равны)
+            cout << "\nЗначение " << arr[midd] << " находится в ячейке с индексом: " << midd << endl;
+            string otvet = to_string(midd) + "";// функция возвращает индекс ячейки
+        }
+        cntSravn++;
+        if (left > right) {          // если границы сомкнулись 
+            cout << "В массиве нет такого значения";
+
+        }
+        cout << "\n\tСравнений: " << cntSravn << endl;
     }
-    auto end = std::chrono::steady_clock::now();
-
-    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
-
-    cout << "Итераций = " << itr << "\t\tСравнений = " << cmp << "\t\tОбменов = " << chg << "\t\tВремя выполнения: " << elapsed_ms.count() << " миллисекунд" << endl;
-}
-
-void inclusionSort(int* num, int size)
-{
-    auto begin = std::chrono::steady_clock::now();
-
-    int cmp = 0, chg = 0, itr = 0;
-    cout << "\n-------Сортировка с помощью прямого включения-------\n";
-    // Для всех элементов кроме начального
-    for (int i = 1; i < size; i++)
-    {
-        itr++;
-        int value = num[i]; chg++; // запоминаем значение элемента
-        int index = i; chg++;     // и его индекс
-        cmp++;
-        while ((index > 0) && (num[index - 1] > value))
-        {
-            itr++;
-            // смещаем другие элементы к концу массива пока они меньше index
-
-            num[index] = num[index - 1]; chg++;
-            index--;    // смещаем просмотр к началу массива
-            cmp++;
-        }
-        num[index] = value; chg++;; // рассматриваемый элемент помещаем на освободившееся место
-    }
-    auto end = std::chrono::steady_clock::now();
-
-    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
-
-    cout << "Итераций = " << itr << "\t\tСравнений = " << cmp << "\t\tОбменов = " << chg << "\t\tВремя выполнения: " << elapsed_ms.count() << " миллисекунд" << endl;
-}
-
-void selectionSort(int* num, int size) {
-    auto begin = std::chrono::steady_clock::now();
-    int cmp = 0, chg = 0, itr = 0;
-    cout << "\n-------Сортировка с помощью прямого выбора-------\n";
-    int min, temp; // для поиска минимального элемента и для обмена
-    for (int i = 0; i < size - 1; i++)
-    {
-        itr++;
-        min = i;  chg++;// запоминаем индекс текущего элемента
-        // ищем минимальный элемент чтобы поместить на место i-ого
-        for (int j = i + 1; j < size; j++)  // для остальных элементов после i-ого
-        {
-            itr++;
-            cmp++;
-            if (num[j] < num[min]) // если элемент меньше минимального,
-                min = j; chg++;      // запоминаем его индекс в min
-        }
-        cmp++;
-        if (min == i) { continue; }  // чтобы не менять элемент сам с собой
-        temp = num[i]; chg++;      // меняем местами i-ый и минимальный элементы
-        num[i] = num[min]; chg++;
-        num[min] = temp; chg++;
-    }
-
-    auto end = std::chrono::steady_clock::now();
-
-    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
-
-    cout << "Итераций = " << itr << "\t\tСравнений = " << cmp << "\t\tОбменов = " << chg << "\t\tВремя выполнения: " << elapsed_ms.count() << " миллисекунд" << endl;
-}
-
-void bubbleSort(int* num, int size) {
-    auto begin = std::chrono::steady_clock::now();
-    int cmp = 0, chg = 0, itr = 0;
-
-    cout << "\n-------Сортировка пузырьком-------\n";
-
-    // Для всех элементов
-    for (int i = 0; i < size - 1; i++) {
-        itr++;
-        for (int j = (size - 1); j > i; j--) {
-            itr++;// для всех элементов после i-ого
-            cmp++;
-            if (num[j - 1] > num[j]) {
-                ;// если текущий элемент меньше предыдущего
-                int temp = num[j - 1]; chg++; // меняем их местами
-                num[j - 1] = num[j]; chg++;
-                num[j] = temp; chg++;
-            }
-        }
-    }
-
-
-    auto end = std::chrono::steady_clock::now();
-
-    auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
-
-    cout << "Итераций = " << itr << "\t\tСравнений = " << cmp << "\t\tОбменов = " << chg << "\t\tВремя выполнения: " << elapsed_ms.count() << " миллисекунд" << endl;
-}
-
-void quickSort(int* numbers, int left, int right, int& cmp, int& chg, int& itr) {
-    itr++; // Считаем итерации (каждый раз, когда вызываем quickSort)
-
-    int pivot = numbers[left]; // Разрешающий элемент
-    int l_hold = left, r_hold = right; // Границы
-
-    while (left < right) { // Пока границы не сомкнутся
-        cmp++; // Сравнение
-        while (numbers[right] > pivot && left < right) {
-            right--;
-            cmp++; // Ещё одно сравнение
-        }
-
-        if (left != right) { // Если границы не сомкнулись
-            numbers[left] = numbers[right]; // Обмен
-            chg++;
-            left++;
-        }
-
-        cmp++; // Сравнение
-        while (numbers[left] < pivot && left < right) {
-            left++;
-            cmp++; // Ещё одно сравнение
-        }
-
-        if (left != right) {
-            numbers[right] = numbers[left]; // Обмен
-            chg++;
-            right--;
-        }
-    }
-
-    numbers[left] = pivot; // Ставим разрешающий элемент на место
-    chg++;
-    int index = left;
-
-    if (l_hold < index - 1)
-        quickSort(numbers, l_hold, index - 1, cmp, chg, itr); // Рекурсивный вызов для левой части
-
-    if (r_hold > index + 1)
-        quickSort(numbers, index + 1, r_hold, cmp, chg, itr); // Рекурсивный вызов для правой части
 }
 
 int linSearch(int arr[], int requiredKey, int arrSize)
@@ -263,7 +128,6 @@ int main() {
                 //если в массиве не найдено искомое число
                 cout << "В массиве нет такого значения" << endl;
             }
-            cout << "\n---------------------------------------------------\n";
 
             auto end = std::chrono::steady_clock::now();
 
@@ -292,7 +156,7 @@ int main() {
 
         for (int i = size - 1; i >= 0; i--)
         {
-            rnd = rand() % (size * 2 - start + 1);
+            rnd = rand() % (size/4 - start + 1);
 
             if (i > (3 * size) / 4) {  //6 75
                 arr6[i] = rnd;
@@ -324,7 +188,11 @@ int main() {
         for (int i = 0; i < 6; i++) {
             cout << "\n\nДля " << i + 1 << " массива:\n";
 
+            int key = 0;
+            int index = 0;
 
+
+            cout << "\n------------------Линейный посик---------------------\n";
             auto begin = std::chrono::steady_clock::now();
             nElement = 0;
             int cmp = 0;
@@ -338,13 +206,44 @@ int main() {
                 //если в массиве не найдено искомое число
                 cout << "В массиве нет такого значения" << endl;
             }
-            cout << "\n---------------------------------------------------\n";
 
             auto end = std::chrono::steady_clock::now();
-
             auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+            
+            cout << "    " << cmp << " сравнений" << "\t за: " << elapsed_ms.count() << " миллисекунд" << endl;
+        
+
+            cout << "\n------------------Бинарный посик---------------------\n";
+        
+            auto FndBegin = std::chrono::steady_clock::now();
+            nElement = 0;
+            cmp = 0;
+            nElement = linSearch(arr1, requiredKey, size);
+
+            if (nElement != -1) {
+                //если в массиве найдено искомое число - выводим индекс элемента на экран
+                cout << "\nЗначение " << requiredKey << " находится в ячейке с индексом: " << nElement << endl;
+            }
+            else {
+                //если в массиве не найдено искомое число
+                cout << "В массиве нет такого значения" << endl;
+            }
+
+            auto fndEnd = std::chrono::steady_clock::now();
+            auto FndElapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(fndEnd - FndBegin);
 
             cout << "    " << cmp << " сравнений" << "\t за: " << elapsed_ms.count() << " миллисекунд" << endl;
+
+
+
+
+            Search_Binary(arr1, 0, size, requiredKey);
+
+            if (index >= 0)
+                cout << "Указанное число находится в ячейке с индексом: " << index << "\n\n";
+            else
+                cout << "В массиве нет такого числа!\n\n";
+
         }
 
 
@@ -363,44 +262,53 @@ int main() {
     }
     case(3):
     {
+        srand(time(0));
+        int sizes[] = { 1000, 2000, 3000, 5000, 10000 };
+        int target = -1; // значение, которое точно не будет найдено для худшего случая
 
-        int size, end, start;
-        IOPUT(int, size, "\nВведите размер массива: ");
-        int* arr = new int[size];
-
-        int thirdCaseSwtch;
-        IOPUT(int, thirdCaseSwtch, "\n1 - ввести массив ручками\n2 - сгенерировать массив случайно\n")
-            cout << "\n";
-        if (thirdCaseSwtch == 1) {
-            InputIntElemsArr(arr, size);
-        }
-        else if (thirdCaseSwtch == 2)
-        {
-            start = -20;
-            end = 20;
-
-            for (int i = 0; i < size; i++)
-            {
-                arr[i] = rand() % (end - start + 1) + start;
+        for (int s = 0; s < 5; ++s) {
+            int size = sizes[s];
+            int* arr = new int[size + 1]; 
+            for (int i = 0; i < size; i++) {
+                arr[i] = rand() % 10000;
             }
+
+            // ЛИНЕЙНЫЙ ПОИСК БЕЗ БАРЬЕРА
+            int comparisons = 0;
+            auto start = chrono::steady_clock::now();
+            int index = -1;
+            for (int i = 0; i < size; i++) {
+                comparisons++;
+                if (arr[i] == target) {
+                    index = i;
+                    break;
+                }
+            }
+            auto end = chrono::steady_clock::now();
+            auto time_no_barrier = chrono::duration_cast<chrono::microseconds>(end - start);
+
+            cout << "\nРазмер массива: " << size;
+            cout << "\n[Без барьера] Сравнений: " << comparisons << ", Время: " << time_no_barrier.count() << " мкс";
+
+
+            // ЛИНЕЙНЫЙ ПОИСК С БАРЬЕРОМ
+            comparisons = 0;
+            arr[size] = target; // барьер
+            start = chrono::steady_clock::now();
+            int i = 0;
+            while (arr[i] != target) {
+                comparisons++;
+                i++;
+            }
+            end = chrono::steady_clock::now();
+            auto time_with_barrier = chrono::duration_cast<chrono::microseconds>(end - start);
+            cout << "\n[С барьером] Сравнений: " << comparisons << ", Время: " << time_with_barrier.count() << " мс\n";
+
+            delete[] arr;
         }
-        else {
-            cout << "Не балуйтесь с клавиатурой!!!"; return 0;
-        }
-
-
-        inclusionSortTrdTask(arr, size);
-
-        cout << "\n";
-        for (int i = 0; i < size; i++) {
-
-            printf("%d ", arr[i]);
-        }
-        cout << "\n\n";
-        return 0;
-
-
+        break;
     }
+
     default: { printf("\nВведён неверный номер!\n"); exit(0); }
     }
 }
